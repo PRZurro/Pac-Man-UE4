@@ -2,42 +2,57 @@
 
 #include "Path_Trigger.h"
 
-
-void APath_Trigger::UpdatePath(int Distance, FVector Direction)
+APath_Trigger::APath_Trigger()
 {
-	
+	if (PossibleMoves.Num() != 0)
+	{
+		PossibleMoves = { GetActorForwardVector(), GetActorRightVector(), -GetActorForwardVector(), -GetActorRightVector() }; //Clockwise: Up, Right, Down, Left
+	}
+}
+
+void APath_Trigger::Tick(float DeltaTime)
+{
+	Updatable = true;
 }
 
 FVector APath_Trigger::GetDirection(int MissChancePercentage)
 {
 	if (FMath::RandRange(0, 100) < MissChancePercentage)
 	{
-		//Get Path
+		return PossibleMoves[FMath::RandRange(0, 3)]; // Get a random direction from the static possible moves member
 	}
 	else 
 	{
-		// Random direction
+		return Direction;
+	}
+}
+
+void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)
+{
+	if (Updatable)
+	{
+		Distance = 10000;
+		Updatable = false;
 	}
 
-	return BestDirection;
-}
+	if (Distance < InputDistance) // Avoid backward editing 
+	{
+		Distance = InputDistance;
+		Direction = InputDirection;
 
-APath_Trigger * APath_Trigger::GetUpperPathTrigger()
-{
-	return UpperPathTrigger;
-}
+		++InputDistance;
+		{
+			if (UpperPathTrigger)
+				UpperPathTrigger->UpdatePath(InputDistance, PossibleMoves[0]);
 
-APath_Trigger * APath_Trigger::GetInferiorPathTrigger()
-{
-	return InferiorPathTrigger;
-}
+			if (RightPathTrigger)
+				RightPathTrigger->UpdatePath(InputDistance, PossibleMoves[1]);
 
-APath_Trigger * APath_Trigger::GetRightPathTrigger()
-{
-	return RightPathTrigger;
-}
+			if (InferiorPathTrigger)
+				InferiorPathTrigger->UpdatePath(InputDistance, PossibleMoves[2]);
 
-APath_Trigger * APath_Trigger::GetLeftPathTrigger()
-{
-	return LeftPathTrigger;
+			if (LeftPathTrigger)
+				LeftPathTrigger->UpdatePath(InputDistance, PossibleMoves[3]);
+		}
+	}
 }

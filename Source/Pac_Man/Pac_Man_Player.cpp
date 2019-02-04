@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
+#include "Coin.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
@@ -85,6 +86,16 @@ void APac_Man_Player::MoveRight(float AxisValue)
 
 void APac_Man_Player::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+
+	ACoin* Coin = Cast<ACoin>(OtherActor);
+
+	if (Coin)
+	{
+		Score++;
+		Destroy(Coin);
+
+		return;
+	}
 
 	APath_Trigger* PathTrigger = Cast<APath_Trigger>(OtherActor);
 

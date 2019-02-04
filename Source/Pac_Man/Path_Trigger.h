@@ -14,26 +14,38 @@ class PAC_MAN_API APath_Trigger : public ATriggerBox
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
-	class APath_Trigger	*	UpperPathTrigger;
-	UPROPERTY(EditAnywhere)
-	class APath_Trigger *	InferiorPathTrigger;
-	UPROPERTY(EditAnywhere)
-	class APath_Trigger *	RightPathTrigger;
-	UPROPERTY(EditAnywhere)
-	class APath_Trigger *	LeftPathTrigger;
+private:
 
-	FVector BestDirection;
+	FVector Direction;
+	int Distance;
+	bool Updatable;
 
-
+	static TArray<FVector> PossibleMoves;
 
 public:
 
-	void UpdatePath(int Distance, FVector Direction);
-	FVector GetDirection(int MissChancePercentage);
+	UPROPERTY(EditAnywhere)
+	class APath_Trigger	*		UpperPathTrigger;
+
+	UPROPERTY(EditAnywhere)
+	class APath_Trigger *		RightPathTrigger;
+
+	UPROPERTY(EditAnywhere)
+	class APath_Trigger *		InferiorPathTrigger;
 	
-	APath_Trigger * GetUpperPathTrigger();
-	APath_Trigger * GetInferiorPathTrigger();
-	APath_Trigger * GetRightPathTrigger();
-	APath_Trigger * GetLeftPathTrigger();
+	UPROPERTY(EditAnywhere)
+	class APath_Trigger *		LeftPathTrigger;
+
+public:
+
+	APath_Trigger();
+
+public:
+
+	virtual void Tick(float DeltaTime)override;
+
+public:
+
+	void UpdatePath(int InputDistance, FVector InputDirection);
+	FVector GetDirection(int MissChancePercentage);	
 };

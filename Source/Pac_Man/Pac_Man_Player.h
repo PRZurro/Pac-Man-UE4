@@ -17,6 +17,8 @@ private:
 	UPROPERTY(EditAnywhere)
 		float Speed;
 
+	UPROPERTY(VisibleAnywhere)
+		int Score;
 
 	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
 		UStaticMeshComponent* SphereVisual;
