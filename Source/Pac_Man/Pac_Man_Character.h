@@ -4,23 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Ghost.generated.h"
+#include "Pac_Man_Character.generated.h"
 
 UCLASS()
-class PAC_MAN_API AGhost : public ACharacter
+class PAC_MAN_API APac_Man_Character : public ACharacter
 {
 	GENERATED_BODY()
 
-private:
-
-	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
-	UStaticMeshComponent* SphereVisual;
-	
-	class UGhost_MovementComponent*  GhostMovementComponent;
-
 public:
 	// Sets default values for this character's properties
-	AGhost();
+	APac_Man_Character();
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,4 +26,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	
+	
 };

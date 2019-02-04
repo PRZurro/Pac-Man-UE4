@@ -54,9 +54,8 @@ void APac_Man_Player::Tick(float DeltaTime)
 
 	if (PacManMovementComponent && (PacManMovementComponent->UpdatedComponent == RootComponent))
 	{
-		PacManMovementComponent->AddInputVector(Direction * Speed *  DeltaTime);
+		PacManMovementComponent->AddInputVector(Direction * Speed); //Deltatime is multiplied in the Movement Component Tick
 	}
-
 }
 
 // Called to bind functionality to input

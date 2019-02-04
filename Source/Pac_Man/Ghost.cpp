@@ -42,6 +42,7 @@ void AGhost::BeginPlay()
 void AGhost::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 // Called to bind functionality to input
