@@ -2,9 +2,24 @@
 
 #include "Path_Trigger.h"
 
-FVector APath_Trigger::GetLocation()
+
+void APath_Trigger::UpdatePath(int Distance, FVector Direction)
 {
-	return GetActorLocation();
+	
+}
+
+FVector APath_Trigger::GetDirection(int MissChancePercentage)
+{
+	if (FMath::RandRange(0, 100) < MissChancePercentage)
+	{
+		//Get Path
+	}
+	else 
+	{
+		// Random direction
+	}
+
+	return BestDirection;
 }
 
 APath_Trigger * APath_Trigger::GetUpperPathTrigger()

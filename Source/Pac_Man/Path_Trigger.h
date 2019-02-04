@@ -23,10 +23,14 @@ class PAC_MAN_API APath_Trigger : public ATriggerBox
 	UPROPERTY(EditAnywhere)
 	class APath_Trigger *	LeftPathTrigger;
 
-	
+	FVector BestDirection;
+
+
+
 public:
 
-	FVector GetLocation();
+	void UpdatePath(int Distance, FVector Direction);
+	FVector GetDirection(int MissChancePercentage);
 	
 	APath_Trigger * GetUpperPathTrigger();
 	APath_Trigger * GetInferiorPathTrigger();
