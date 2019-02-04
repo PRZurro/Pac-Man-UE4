@@ -11,6 +11,12 @@ class PAC_MAN_API AGhost : public ACharacter
 {
 	GENERATED_BODY()
 
+private:
+
+	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
+	UStaticMeshComponent* SphereVisual;
+
+		
 public:
 	// Sets default values for this character's properties
 	AGhost();
@@ -26,6 +32,4 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
-	
 };

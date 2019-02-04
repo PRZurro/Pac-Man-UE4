@@ -10,7 +10,6 @@ void UPac_Man_MovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	// Make sure that everything is still valid, and that we are allowed to move.
 	if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime))
 	{
-		
 		return;
 	}
 
