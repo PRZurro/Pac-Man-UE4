@@ -4,41 +4,34 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Pac_Man_Player.generated.h"
+#include "Ghost_Pawn.generated.h"
 
 UCLASS()
-class PAC_MAN_API APac_Man_Player : public APawn
+class PAC_MAN_API AGhost_Pawn : public APawn
 {
 	GENERATED_BODY()
 
 private:
 
-	//class AGhost;
 	UPROPERTY(EditAnywhere)
-		float Speed;
+	int MissChance;
 
-	UPROPERTY(VisibleAnywhere)
-		int Score;
+	UPROPERTY(EditAnywhere)
+	float Speed;
 
-	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
-		UStaticMeshComponent* SphereVisual;
+	UPROPERTY(EditAnywhere)
+	FVector Direction;
 
 	class USphereComponent* SphereComponent;
 
-	FVector Direction;
+	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
+	UStaticMeshComponent* SphereVisual;
 
-protected:
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bQuitGame;
-
-private:
-
-	class UPac_Man_MovementComponent* PacManMovementComponent;
+	//class UGhost_PawnMovementComponent*  GhostMovementComponent;
 
 public:
 	// Sets default values for this pawn's properties
-	APac_Man_Player();
+	AGhost_Pawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -53,21 +46,7 @@ public:
 
 private:
 
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
-
-public:
-
-	void EndGame();
-
-private:
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
-	UFUNCTION()
-	void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-public:
-
-	virtual UPawnMovementComponent * GetMovementComponent() const override;
-	FVector GetMovementDirection();
 };

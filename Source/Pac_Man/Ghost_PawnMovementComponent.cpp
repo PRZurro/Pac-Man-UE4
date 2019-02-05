@@ -1,8 +1,9 @@
-	// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Ghost_MovementComponent.h"
+#include "Ghost_PawnMovementComponent.h"
 
-void UGhost_MovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+
+void UGhost_PawnMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
 	// Make sure that everything is still valid, and that we are allowed to move.
 	if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime))

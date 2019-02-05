@@ -3,18 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Ghost_MovementComponent.generated.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "Ghost_PawnMovementComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PAC_MAN_API UGhost_MovementComponent : public UCharacterMovementComponent
+class PAC_MAN_API UGhost_PawnMovementComponent : public UPawnMovementComponent
 {
 	GENERATED_BODY()
 	
-	
+public:
+
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-	
 };

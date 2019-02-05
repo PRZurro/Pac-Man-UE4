@@ -1,13 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Path_Trigger.h"
+#include "Components/BoxComponent.h"
+
+TArray<FVector> APath_Trigger::PossibleMoves;
 
 APath_Trigger::APath_Trigger()
 {
-	if (PossibleMoves.Num() != 0)
+	if (PossibleMoves.Num() == 0)
 	{
 		PossibleMoves = { GetActorForwardVector(), GetActorRightVector(), -GetActorForwardVector(), -GetActorRightVector() }; //Clockwise: Up, Right, Down, Left
 	}
+}
+
+void APath_Trigger::BeginPlay()
+{
+	Direction = GetDirection(1);
 }
 
 void APath_Trigger::Tick(float DeltaTime)
@@ -46,13 +54,13 @@ void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)
 				UpperPathTrigger->UpdatePath(InputDistance, PossibleMoves[0]);
 
 			if (RightPathTrigger)
-				RightPathTrigger->UpdatePath(InputDistance, PossibleMoves[1]);
+				RightPathTrigger->UpdatePath(InputDistance, PossibleMoves[3]);
 
 			if (InferiorPathTrigger)
 				InferiorPathTrigger->UpdatePath(InputDistance, PossibleMoves[2]);
 
 			if (LeftPathTrigger)
-				LeftPathTrigger->UpdatePath(InputDistance, PossibleMoves[3]);
+				LeftPathTrigger->UpdatePath(InputDistance, PossibleMoves[1]);
 		}
 	}
 }

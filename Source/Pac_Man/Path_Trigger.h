@@ -20,6 +20,8 @@ private:
 	int Distance;
 	bool Updatable;
 
+public:
+
 	static TArray<FVector> PossibleMoves;
 
 public:
@@ -42,6 +44,7 @@ public:
 
 public:
 
+	virtual void BeginPlay()override;
 	virtual void Tick(float DeltaTime)override;
 
 public:

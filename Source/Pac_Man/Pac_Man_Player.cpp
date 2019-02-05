@@ -2,13 +2,13 @@
 
 #include "Pac_Man_Player.h"
 #include "Components/InputComponent.h"
-#include "Engine/GameEngine.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
 #include "Coin.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Engine/GameEngine.h"
 
 // Sets default values
 APac_Man_Player::APac_Man_Player()
@@ -21,7 +21,6 @@ APac_Man_Player::APac_Man_Player()
 	RootComponent = SphereComponent;
 	SphereComponent->InitSphereRadius(40.0f);
 	SphereComponent->SetCollisionProfileName(TEXT("Pawn"));
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &APac_Man_Player::BeginOverlap);
 
 	// Create and position a mesh component so we can see where our sphere is
 	SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
@@ -40,12 +39,16 @@ APac_Man_Player::APac_Man_Player()
 
 	PacManMovementComponent = CreateDefaultSubobject<UPac_Man_MovementComponent>(TEXT("CustomMovementComponent"));
 	PacManMovementComponent->UpdatedComponent = RootComponent;
+
+	bQuitGame = false;
 }
 
 // Called when the game starts or when spawned
 void APac_Man_Player::BeginPlay()
 {
 	Super::BeginPlay();
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &APac_Man_Player::OnBeginOverlap);
+	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &APac_Man_Player::OnEndOverlap);
 }
 
 // Called every frame
@@ -84,33 +87,33 @@ void APac_Man_Player::MoveRight(float AxisValue)
 	}
 }
 
-void APac_Man_Player::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void APac_Man_Player::EndGame()
 {
+	bQuitGame = true;
+}
 
+void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
 	ACoin* Coin = Cast<ACoin>(OtherActor);
 
 	if (Coin)
 	{
-		Score++;
+		++Score;
 		Destroy(Coin);
 
 		return;
 	}
+}
 
+void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	APath_Trigger* PathTrigger = Cast<APath_Trigger>(OtherActor);
 
-	if (PathTrigger && OverlappedComponent == SphereComponent)
+	if (PathTrigger)
 	{
+		PathTrigger->UpdatePath(0, Direction);
 		return;
 	}
-
-	//AGhost * Ghost = Cast<AGhost>(OtherActor); // It is done here to not save component registration in each ghost class (and avoid doing multiple checks there) and ease of use
-
-	//if (Ghost)
-	//{
-	//	//endgame
-	//	return;
-	//}
 }
 
 UPawnMovementComponent * APac_Man_Player::GetMovementComponent() const
