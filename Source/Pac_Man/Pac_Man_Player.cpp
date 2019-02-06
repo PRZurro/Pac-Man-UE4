@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Pac_Man_Player.h"
+#include "Engine/GameEngine.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Engine/GameEngine.h"
 #include "Components/StaticMeshComponent.h"
-#include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
 #include "Coin_Actor.h"
 #include "Ghost_Actor.h"
@@ -38,6 +38,7 @@ APac_Man_Player::APac_Man_Player()
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
+	Score = 0;
 	bQuitGame = false;
 }
 
@@ -45,6 +46,7 @@ APac_Man_Player::APac_Man_Player()
 void APac_Man_Player::BeginPlay()
 {
 	Super::BeginPlay();
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &APac_Man_Player::OnBeginOverlap);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &APac_Man_Player::OnEndOverlap);
 	SphereComponent->OnComponentHit.AddDynamic(this, &APac_Man_Player::OnHit);
 }
@@ -87,19 +89,23 @@ void APac_Man_Player::EndGame()
 	bQuitGame = true;
 }
 
-void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
 
+
+
+void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
 	ACoin_Actor* Coin = Cast<ACoin_Actor>(OtherActor);
 
 	if (Coin)
 	{
 		++Score;
-		Destroy(Coin);
-
+		Coin->Destroy();
 		return;
 	}
+}
 
+void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	APath_Trigger* PathTrigger = Cast<APath_Trigger>(OtherActor);
 
 	if (PathTrigger)
@@ -115,7 +121,7 @@ void APac_Man_Player::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 
 	if (Ghost)
 	{
-		EndGame();
+		GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
 	}
 }
 
