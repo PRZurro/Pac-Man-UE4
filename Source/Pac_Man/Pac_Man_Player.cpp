@@ -38,9 +38,6 @@ APac_Man_Player::APac_Man_Player()
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	PacManMovementComponent = CreateDefaultSubobject<UPac_Man_MovementComponent>(TEXT("CustomMovementComponent"));
-	PacManMovementComponent->UpdatedComponent = RootComponent;
-
 	bQuitGame = false;
 }
 
@@ -48,8 +45,8 @@ APac_Man_Player::APac_Man_Player()
 void APac_Man_Player::BeginPlay()
 {
 	Super::BeginPlay();
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &APac_Man_Player::OnBeginOverlap);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &APac_Man_Player::OnEndOverlap);
+	SphereComponent->OnComponentHit.AddDynamic(this, &APac_Man_Player::OnHit);
 }
 
 // Called every frame
@@ -57,10 +54,7 @@ void APac_Man_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (PacManMovementComponent && (PacManMovementComponent->UpdatedComponent == RootComponent))
-	{
-		PacManMovementComponent->AddInputVector(Direction * Speed); //Deltatime is multiplied in the Movement Component Tick
-	}
+	AddActorWorldOffset(Speed * Direction * DeltaTime,true);
 }
 
 // Called to bind functionality to input
@@ -93,8 +87,9 @@ void APac_Man_Player::EndGame()
 	bQuitGame = true;
 }
 
-void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
 	ACoin* Coin = Cast<ACoin>(OtherActor);
 
 	if (Coin)
@@ -105,16 +100,6 @@ void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, 
 		return;
 	}
 
-	AGhost_Actor * Ghost = Cast<AGhost_Actor>(OtherActor);
-
-	if(Ghost)
-	{
-		EndGame();
-	}
-}
-
-void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
 	APath_Trigger* PathTrigger = Cast<APath_Trigger>(OtherActor);
 
 	if (PathTrigger)
@@ -124,9 +109,14 @@ void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 	}
 }
 
-UPawnMovementComponent * APac_Man_Player::GetMovementComponent() const
+void APac_Man_Player::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	return PacManMovementComponent;
+	AGhost_Actor * Ghost = Cast<AGhost_Actor>(OtherActor);
+
+	if (Ghost)
+	{
+		EndGame();
+	}
 }
 
 FVector APac_Man_Player::GetMovementDirection()

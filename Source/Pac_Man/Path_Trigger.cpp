@@ -32,22 +32,40 @@ FVector APath_Trigger::GetDirection(int MissChancePercentage)
 {
 	if (FMath::RandRange(0, 100) < MissChancePercentage)
 	{
-		return PossibleMoves[FMath::RandRange(0, 3)]; // Get a random direction from the static possible moves member
+		return GetRandomDirectionAvailable();
 	}
 	else 
 	{
-		return Direction;
+		if(Direction != FVector(0.f, 0.f, 0.f))
+			return Direction;
+
+		else return GetRandomDirectionAvailable();
 	}
 }
 
 TArray<FVector> APath_Trigger::GetDirectionsAvailable()
 {
-	TArray<FVector> DirectionsAvailable();
+	TArray<FVector> DirectionsAvailable = {};
 
-	if(UpperPathTrigger)
-		DirectionsAvailable.
+	if (UpperPathTrigger)
+		DirectionsAvailable.Add(PossibleMoves[0]);
 
-	return TArray<FVector>();
+	if (RightPathTrigger)
+		DirectionsAvailable.Add(PossibleMoves[1]);
+
+	if (InferiorPathTrigger)
+		DirectionsAvailable.Add(PossibleMoves[2]);
+
+	if (LeftPathTrigger)
+		DirectionsAvailable.Add(PossibleMoves[3]);
+
+	return DirectionsAvailable;
+}
+
+FVector APath_Trigger::GetRandomDirectionAvailable()
+{
+	TArray<FVector> TempDirections = GetDirectionsAvailable();
+	return TempDirections[FMath::RandRange(0, TempDirections.Num() - 1)]; // Get a random direction from the static possible moves member
 }
 
 void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)

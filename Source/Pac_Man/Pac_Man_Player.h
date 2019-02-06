@@ -32,10 +32,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	bool bQuitGame;
 
-private:
-
-	class UPac_Man_MovementComponent* PacManMovementComponent;
-
 public:
 	// Sets default values for this pawn's properties
 	APac_Man_Player();
@@ -61,13 +57,13 @@ public:
 	void EndGame();
 
 private:
-	UFUNCTION()
-	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
+
 	UFUNCTION()
 	void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 public:
 
-	virtual UPawnMovementComponent * GetMovementComponent() const override;
 	FVector GetMovementDirection();
 };

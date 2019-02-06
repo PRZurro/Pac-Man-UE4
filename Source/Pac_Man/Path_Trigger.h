@@ -15,7 +15,6 @@ class PAC_MAN_API APath_Trigger : public ATriggerBox
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(EditAnywhere)
 	FVector Direction;
 
 	int Distance;
@@ -56,4 +55,5 @@ public:
 
 	FVector GetDirection(int MissChancePercentage);	
 	TArray<FVector> GetDirectionsAvailable();
+	FVector GetRandomDirectionAvailable();
 };
