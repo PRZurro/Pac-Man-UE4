@@ -15,8 +15,9 @@ class PAC_MAN_API APath_Trigger : public ATriggerBox
 	GENERATED_BODY()
 
 private:
-
+	UPROPERTY(EditAnywhere)
 	FVector Direction;
+
 	int Distance;
 	bool Updatable;
 
@@ -44,11 +45,15 @@ public:
 
 public:
 
-	virtual void BeginPlay()override;
-	virtual void Tick(float DeltaTime)override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override; 
 
 public:
 
 	void UpdatePath(int InputDistance, FVector InputDirection);
+
+public:
+
 	FVector GetDirection(int MissChancePercentage);	
+	TArray<FVector> GetDirectionsAvailable();
 };
