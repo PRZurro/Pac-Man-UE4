@@ -16,9 +16,13 @@ class PAC_MAN_API APath_Trigger : public ATriggerBox
 
 private:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	UPROPERTY(EditAnywhere)
 >>>>>>> master
+=======
+	UPROPERTY(EditAnywhere)
+>>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
 	FVector Direction;
 
 	int Distance;
@@ -60,7 +64,10 @@ public:
 	FVector GetDirection(int MissChancePercentage);	
 	TArray<FVector> GetDirectionsAvailable();
 <<<<<<< HEAD
+<<<<<<< HEAD
 	FVector GetRandomDirectionAvailable();
 =======
 >>>>>>> master
+=======
+>>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
 };

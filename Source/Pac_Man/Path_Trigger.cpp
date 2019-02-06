@@ -46,6 +46,7 @@ FVector APath_Trigger::GetDirection(int MissChancePercentage)
 TArray<FVector> APath_Trigger::GetDirectionsAvailable()
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	TArray<FVector> DirectionsAvailable = {};
 
 	if (UpperPathTrigger)
@@ -68,13 +69,18 @@ FVector APath_Trigger::GetRandomDirectionAvailable()
 	TArray<FVector> TempDirections = GetDirectionsAvailable();
 	return TempDirections[FMath::RandRange(0, TempDirections.Num() - 1)]; // Get a random direction from the static possible moves member
 =======
+=======
+>>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
 	TArray<FVector> DirectionsAvailable();
 
 	if(UpperPathTrigger)
 		DirectionsAvailable.
 
 	return TArray<FVector>();
+<<<<<<< HEAD
 >>>>>>> master
+=======
+>>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
 }
 
 void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)
