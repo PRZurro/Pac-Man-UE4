@@ -18,8 +18,8 @@ AGhost_Actor::AGhost_Actor()
 	// Our root component will be a sphere that reacts to physics
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = SphereComponent;
-	SphereComponent->InitSphereRadius(40.0);
-	SphereComponent->SetCollisionProfileName(TEXT("Actor"));
+	SphereComponent->InitSphereRadius(40.0f);
+	SphereComponent->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Create and position a mesh component so we can see where our sphere is
 	SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
@@ -39,28 +39,21 @@ void AGhost_Actor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGhost_Actor::OnBeginOverlap);
+	if (RootComponent)
+	{
+		SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGhost_Actor::OnBeginOverlap);
+	}
 }
 
 // Called every frame
 void AGhost_Actor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AddActorWorldOffset(Speed * Direction * DeltaTime,false);
+	AddActorWorldOffset(Speed * Direction * DeltaTime);
 }
 
 void AGhost_Actor::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	//APac_Man_Player * PacMan = Cast<APac_Man_Player>(OtherActor);
-
-	//UE_LOG(LogTemp, Warning, TEXT("Objeto detectado"));
-	//if (PacMan)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Pierde"));
-	//	PacMan->EndGame();
-
-	//	return;
-	//}
 
 	APath_Trigger * Trigger = Cast<APath_Trigger>(OtherActor);
 
@@ -69,10 +62,21 @@ void AGhost_Actor::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 		DirectionToChange = Trigger->GetDirection(MissChance);
 		FVector temp = Direction * Speed;
 		float time = (100/ temp.Size()) *0.88f;
+
+
 		
 		GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &AGhost_Actor::ChangeDirection, time);
 	}
+
+	APac_Man_Player * PacMan = Cast<APac_Man_Player>(OtherActor);
+
+	if (PacMan)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pierde"));
+		PacMan->EndGame();
+	}
 }
+
 
 void AGhost_Actor::ChangeDirection()
 {
