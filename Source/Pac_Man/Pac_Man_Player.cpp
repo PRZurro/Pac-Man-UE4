@@ -8,7 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
-#include "Coin.h"
+#include "Coin_Actor.h"
 #include "Ghost_Actor.h"
 
 // Sets default values
@@ -90,7 +90,7 @@ void APac_Man_Player::EndGame()
 void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
-	ACoin* Coin = Cast<ACoin>(OtherActor);
+	ACoin_Actor* Coin = Cast<ACoin_Actor>(OtherActor);
 
 	if (Coin)
 	{
