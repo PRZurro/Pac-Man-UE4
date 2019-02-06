@@ -8,14 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
-<<<<<<< HEAD
 #include "Coin_Actor.h"
-=======
-#include "Coin.h"
-<<<<<<< HEAD
->>>>>>> master
-=======
->>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
 #include "Ghost_Actor.h"
 
 // Sets default values
@@ -106,20 +99,6 @@ void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 
 		return;
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8d5a671... Transfered Ghost's Class from Pawn to actor
-
-	AGhost_Actor * Ghost = Cast<AGhost_Actor>(OtherActor);
-
-	if(Ghost)
-	{
-		EndGame();
-	}
-}
->>>>>>> master
 
 	APath_Trigger* PathTrigger = Cast<APath_Trigger>(OtherActor);
 
