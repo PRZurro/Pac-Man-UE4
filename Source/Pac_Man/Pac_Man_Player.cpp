@@ -3,12 +3,13 @@
 #include "Pac_Man_Player.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Engine/GameEngine.h"
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man_MovementComponent.h"
 #include "Path_Trigger.h"
 #include "Coin.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-#include "Engine/GameEngine.h"
+#include "Ghost_Actor.h"
 
 // Sets default values
 APac_Man_Player::APac_Man_Player()
@@ -102,6 +103,13 @@ void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, 
 		Destroy(Coin);
 
 		return;
+	}
+
+	AGhost_Actor * Ghost = Cast<AGhost_Actor>(OtherActor);
+
+	if(Ghost)
+	{
+		EndGame();
 	}
 }
 
