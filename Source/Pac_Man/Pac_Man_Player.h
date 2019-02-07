@@ -22,12 +22,11 @@ private:
 
 	class USphereComponent* SphereComponent;
 
+	class UPac_Man_MovementComponent* MovementComponent;
+
 	FVector Direction;
 
 protected:
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bQuitGame;
 
 	UPROPERTY(BlueprintReadOnly)
 		int Score;
@@ -52,19 +51,17 @@ private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
-public:
-
-	void EndGame();
-
 private:
+
 	UFUNCTION()
-	void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UFUNCTION()
-	void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-	
+		void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 public:
 
 	FVector GetMovementDirection();
+
+	virtual UPawnMovementComponent* GetMovementComponent() const override;
 };

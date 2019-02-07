@@ -2,6 +2,7 @@
 
 #include "Ghost_Actor.h"
 #include "Engine/GameEngine.h"
+#include "Engine/GameEngine.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man/Pac_Man_Player.h"
@@ -40,6 +41,7 @@ void AGhost_Actor::BeginPlay()
 	Super::BeginPlay();
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGhost_Actor::OnBeginOverlap);
+	SphereComponent->OnComponentHit.AddDynamic(this, &AGhost_Actor::OnHit);
 }
 
 // Called every frame
@@ -51,16 +53,6 @@ void AGhost_Actor::Tick(float DeltaTime)
 
 void AGhost_Actor::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	//APac_Man_Player * PacMan = Cast<APac_Man_Player>(OtherActor);
-
-	//UE_LOG(LogTemp, Warning, TEXT("Objeto detectado"));
-	//if (PacMan)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Pierde"));
-	//	PacMan->EndGame();
-
-	//	return;
-	//}
 
 	APath_Trigger * Trigger = Cast<APath_Trigger>(OtherActor);
 
@@ -74,8 +66,32 @@ void AGhost_Actor::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 	}
 }
 
+void AGhost_Actor::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	APac_Man_Player * PacMan = Cast<APac_Man_Player>(OtherActor);
+
+	if (PacMan)
+	{
+		GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
+
+		return;
+	}
+}
+
 void AGhost_Actor::ChangeDirection()
 {
 	Direction = DirectionToChange;
+}
+
+void AGhost_Actor::Affect(ECollectibleTypeEnum Type)
+{
+	if (Type == ECollectibleTypeEnum::CTE_Coin)
+	{
+
+	}
+	else if (Type == ECollectibleTypeEnum::CTE_CornerPowerUp)
+	{
+
+	}
 }
 

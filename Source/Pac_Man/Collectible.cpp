@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Coin_Actor.h"
-#include "Components/SphereComponent.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Collectible.h"
 #include "Components/StaticMeshComponent.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
-ACoin_Actor::ACoin_Actor()
+ACollectible::ACollectible()
 {
 	// Create and position a mesh component so we can see where our sphere is
 	SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
@@ -23,14 +22,14 @@ ACoin_Actor::ACoin_Actor()
 }
 
 // Called when the game starts or when spawned
-void ACoin_Actor::BeginPlay()
+void ACollectible::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ACoin_Actor::Tick(float DeltaTime)
+void ACollectible::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

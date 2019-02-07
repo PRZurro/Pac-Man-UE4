@@ -65,7 +65,13 @@ TArray<FVector> APath_Trigger::GetDirectionsAvailable()
 FVector APath_Trigger::GetRandomDirectionAvailable()
 {
 	TArray<FVector> TempDirections = GetDirectionsAvailable();
-	return TempDirections[FMath::RandRange(0, TempDirections.Num() - 1)]; // Get a random direction from the static possible moves member
+
+	if (TempDirections.Num() > 0)
+	{
+		return TempDirections[FMath::RandRange(0, TempDirections.Num() - 1)]; // Get a random direction from the static possible moves member
+	}
+
+	return FVector(0.f);
 }
 
 void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)
@@ -77,18 +83,13 @@ void APath_Trigger::UpdatePath(int InputDistance, FVector InputDirection)
 		Updatable = false;
 	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("Distance: %d"), Distance);
-	//UE_LOG(LogTemp, Warning, TEXT("InputDistance: %d"), InputDistance);
-	//UE_LOG(LogTemp, Warning, TEXT("InputDirection: %s"), *InputDirection.ToString());
 	if (InputDistance < Distance) // Avoid backward editing 
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
 		Distance = InputDistance;
 		Direction = InputDirection;
 
 		++InputDistance;
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("hola"));
 			if (UpperPathTrigger)
 				UpperPathTrigger->UpdatePath(InputDistance, PossibleMoves[2]);
 
