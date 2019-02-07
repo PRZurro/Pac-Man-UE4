@@ -16,6 +16,8 @@ AGhost_Actor::AGhost_Actor()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bCanEat = true;
+
 	// Our root component will be a sphere that reacts to physics
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = SphereComponent;
@@ -39,6 +41,9 @@ AGhost_Actor::AGhost_Actor()
 void AGhost_Actor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StartPosition = GetActorLocation();
+	StartDirection = Direction;
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGhost_Actor::OnBeginOverlap);
 	SphereComponent->OnComponentHit.AddDynamic(this, &AGhost_Actor::OnHit);
@@ -72,9 +77,24 @@ void AGhost_Actor::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor
 
 	if (PacMan)
 	{
-		GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
+	
+		if (PacMan->IsHunting())
+		{
+			Destroy();
+			PacMan->AddScore(200);
+		}
 
-		return;
+		if (bCanEat)
+		{
+			GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
+		}
+			
+		
+		else
+		{
+			SetActorLocation(StartPosition);
+			DirectionToChange = Direction = StartDirection;
+		}
 	}
 }
 
@@ -83,15 +103,24 @@ void AGhost_Actor::ChangeDirection()
 	Direction = DirectionToChange;
 }
 
-void AGhost_Actor::Affect(ECollectibleTypeEnum Type)
+
+void AGhost_Actor::Affect(ECollectibleTypeEnum EffectType)
 {
-	if (Type == ECollectibleTypeEnum::CTE_Coin)
-	{
 
-	}
-	else if (Type == ECollectibleTypeEnum::CTE_CornerPowerUp)
+	if (EffectType == ECollectibleTypeEnum::CTE_CornerPowerUp)
 	{
-
+		bCanEat = false;
+		//set new material
 	}
+	else if (EffectType == ECollectibleTypeEnum::CTE_HunterPowerUp)
+	{
+		bCanEat = false;
+	}
+}
+
+void AGhost_Actor::ResetEffectsState()
+{
+	bCanEat = true;
+	//Reset material
 }
 

@@ -23,16 +23,23 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		FVector Direction;
-
-	FVector DirectionToChange;
-
-	class USphereComponent* SphereComponent;
-
 	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
 		class UStaticMeshComponent* SphereVisual;
 
-	FTimerHandle UnusedHandle;
+private:
 
+	bool bCanEat;
+
+	FVector DirectionToChange;
+
+	FVector StartDirection;
+
+	FVector StartPosition;
+
+	class USphereComponent* SphereComponent;
+
+	FTimerHandle UnusedHandle;
+	
 public:
 	// Sets default values for this pawn's properties
 	AGhost_Actor();
@@ -47,7 +54,7 @@ public:
 
 private:
 
-	UFUNCTION()
+	UFUNCTION() 
 		void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 
 	UFUNCTION()
@@ -57,6 +64,9 @@ public:
 
 	UFUNCTION()
 		void ChangeDirection();
-		
-	void Affect(ECollectibleTypeEnum Type);
+
+public:
+
+	void Affect(ECollectibleTypeEnum EffectType);
+	void ResetEffectsState();
 };

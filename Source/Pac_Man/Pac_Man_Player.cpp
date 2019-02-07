@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Pac_Man_Player.h"
-#include "EngineUtils.h"
+#include "Pac_ManGameModeBase.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
@@ -16,6 +16,8 @@ APac_Man_Player::APac_Man_Player()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	bIsHunting = false;
 
 	// Our root component will be a sphere that reacts to physics
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
@@ -96,14 +98,26 @@ void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComp, AActo
 	{
 		if (Collectible->Type == ECollectibleTypeEnum::CTE_Coin)
 			++Score;
-		else if (Collectible->Type == ECollectibleTypeEnum::CTE_CornerPowerUp)
+		else if (Collectible->Type == ECollectibleTypeEnum::CTE_CornerPowerUp || Collectible->Type == ECollectibleTypeEnum::CTE_HunterPowerUp)
 		{
-			for (TActorIterator<AGhost_Actor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+
+			APac_ManGameModeBase * GameMode = (APac_ManGameModeBase*)GetWorld()->GetAuthGameMode();
+
+
+
+			if (Collectible->Type == ECollectibleTypeEnum::CTE_CornerPowerUp)
 			{
-				ActorItr->Affect(Collectible->Type);
+				GameMode->SendEffectToGhosts(Collectible->Type, CornerPowerUpAffectionDuration);
+			}
+
+			if (Collectible->Type == ECollectibleTypeEnum::CTE_HunterPowerUp) 
+			{
+				bIsHunting = true;
+				GameMode->SendEffectToGhosts(Collectible->Type, HunterPowerUpAffectionDuration);
+				GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &APac_Man_Player::HuntFalse, HunterPowerUpAffectionDuration);
 			}
 		}
-
+			
 		Collectible->Destroy();
 		return;
 	}
@@ -118,6 +132,21 @@ void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		PathTrigger->UpdatePath(0, Direction);
 		return;
 	}
+}
+
+void APac_Man_Player::HuntFalse()
+{
+	bIsHunting = false;
+}
+
+void APac_Man_Player::AddScore(int ScoreToAdd)
+{
+	Score += ScoreToAdd;
+}
+
+bool APac_Man_Player::IsHunting()
+{
+	return bIsHunting;
 }
 
 FVector APac_Man_Player::GetMovementDirection()

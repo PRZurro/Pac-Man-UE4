@@ -20,11 +20,23 @@ private:
 	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
 		UStaticMeshComponent* SphereVisual;
 
+	UPROPERTY(EditAnywhere)
+		float HunterPowerUpAffectionDuration;
+
+	UPROPERTY(EditAnywhere)
+		float CornerPowerUpAffectionDuration;
+
+private:
+
 	class USphereComponent* SphereComponent;
 
 	class UPac_Man_MovementComponent* MovementComponent;
 
 	FVector Direction;
+
+	bool bIsHunting; 
+
+	FTimerHandle UnusedHandle;
 
 protected:
 
@@ -59,7 +71,16 @@ private:
 	UFUNCTION()
 		void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+		void HuntFalse();
+
 public:
+
+	void AddScore(int ScoreToAdd);
+
+public:
+
+	bool IsHunting();
 
 	FVector GetMovementDirection();
 
