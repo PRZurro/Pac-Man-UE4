@@ -10,6 +10,7 @@
 #include "Path_Trigger.h"
 #include "Ghost_Actor.h"
 #include "Collectible.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 APac_Man_Player::APac_Man_Player()
@@ -52,6 +53,11 @@ void APac_Man_Player::BeginPlay()
 	Super::BeginPlay();
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &APac_Man_Player::OnBeginOverlap);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &APac_Man_Player::OnEndOverlap);
+
+	UMaterialInterface *  Material = SphereVisual->GetMaterial(0);
+	Materialnstance = UMaterialInstanceDynamic::Create(Material, SphereVisual);
+	StartingColor = Materialnstance->K2_GetVectorParameterValue(TEXT("BaseColor"));
+	SphereVisual->SetMaterial(0,Materialnstance);
 }
 
 // Called every frame
@@ -103,21 +109,23 @@ void APac_Man_Player::OnBeginOverlap(UPrimitiveComponent * OverlappedComp, AActo
 
 			APac_ManGameModeBase * GameMode = (APac_ManGameModeBase*)GetWorld()->GetAuthGameMode();
 
-
-
 			if (Collectible->Type == ECollectibleTypeEnum::CTE_CornerPowerUp)
 			{
-				GameMode->SendEffectToGhosts(Collectible->Type, CornerPowerUpAffectionDuration);
-			}
+				FLinearColor tempColor = Materialnstance->K2_GetVectorParameterValue(TEXT("BaseColor"));
 
-			if (Collectible->Type == ECollectibleTypeEnum::CTE_HunterPowerUp) 
+				Materialnstance->SetVectorParameterValue("BaseColor", InvencibleColor);
+				tempColor = Materialnstance->K2_GetVectorParameterValue(TEXT("BaseColor"));
+				GameMode->SendEffectToGhosts(Collectible->Type, CornerPowerUpAffectionDuration);
+				GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &APac_Man_Player::ResetState, CornerPowerUpAffectionDuration);
+			}
+			else if (Collectible->Type == ECollectibleTypeEnum::CTE_HunterPowerUp) 
 			{
 				bIsHunting = true;
+				Materialnstance->SetVectorParameterValue("BaseColor", HunterColor);
 				GameMode->SendEffectToGhosts(Collectible->Type, HunterPowerUpAffectionDuration);
-				GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &APac_Man_Player::HuntFalse, HunterPowerUpAffectionDuration);
+				GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &APac_Man_Player::ResetState, HunterPowerUpAffectionDuration);
 			}
-		}
-			
+		}	
 		Collectible->Destroy();
 		return;
 	}
@@ -134,9 +142,10 @@ void APac_Man_Player::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 	}
 }
 
-void APac_Man_Player::HuntFalse()
+void APac_Man_Player::ResetState()
 {
 	bIsHunting = false;
+	Materialnstance->SetVectorParameterValue("BaseColor", StartingColor);
 }
 
 void APac_Man_Player::AddScore(int ScoreToAdd)

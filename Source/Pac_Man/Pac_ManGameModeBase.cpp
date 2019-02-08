@@ -9,7 +9,7 @@ void APac_ManGameModeBase::SendEffectToGhosts(ECollectibleTypeEnum Effect, float
 	for (TActorIterator<AGhost_Actor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		ActorItr->Affect(Effect);
-		GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &APac_ManGameModeBase::ResetGhostsEffects, Duration);
+		GetWorld()->GetTimerManager().SetTimer(UnusedHandle, *ActorItr, &AGhost_Actor::ResetEffectsState, Duration);
 	}
 }
 
@@ -20,4 +20,3 @@ void APac_ManGameModeBase::ResetGhostsEffects()
 		ActorItr->ResetEffectsState();
 	}
 }
-

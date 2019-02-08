@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Pac_Man/Pac_Man_Player.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Pac_Man/Path_Trigger.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
@@ -42,12 +43,18 @@ void AGhost_Actor::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	StartPosition = GetActorLocation();
 	StartDirection = Direction;
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGhost_Actor::OnBeginOverlap);
 	SphereComponent->OnComponentHit.AddDynamic(this, &AGhost_Actor::OnHit);
-}
+
+	UMaterialInterface *  Material = SphereVisual->GetMaterial(0);
+	Materialnstance = UMaterialInstanceDynamic::Create(Material, SphereVisual);
+	StartingColor = Materialnstance->K2_GetVectorParameterValue(TEXT("BaseColor"));
+	SphereVisual->SetMaterial(0, Materialnstance);
+}	
 
 // Called every frame
 void AGhost_Actor::Tick(float DeltaTime)
@@ -88,8 +95,6 @@ void AGhost_Actor::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor
 		{
 			GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
 		}
-			
-		
 		else
 		{
 			SetActorLocation(StartPosition);
@@ -110,17 +115,18 @@ void AGhost_Actor::Affect(ECollectibleTypeEnum EffectType)
 	if (EffectType == ECollectibleTypeEnum::CTE_CornerPowerUp)
 	{
 		bCanEat = false;
-		//set new material
 	}
 	else if (EffectType == ECollectibleTypeEnum::CTE_HunterPowerUp)
 	{
 		bCanEat = false;
+		Materialnstance->SetVectorParameterValue("BaseColor", FrightenedColor);
 	}
 }
 
 void AGhost_Actor::ResetEffectsState()
 {
 	bCanEat = true;
+	Materialnstance->SetVectorParameterValue("BaseColor", StartingColor);
 	//Reset material
 }
 

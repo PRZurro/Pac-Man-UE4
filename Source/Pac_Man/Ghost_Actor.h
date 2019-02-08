@@ -23,20 +23,25 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		FVector Direction;
+
 	UPROPERTY(VisibleAnywhere) // It was not seen anywhere
 		class UStaticMeshComponent* SphereVisual;
 
+	UPROPERTY(EditAnywhere)
+		FLinearColor FrightenedColor;
+
 private:
+
+	class UMaterialInstanceDynamic * Materialnstance;
+	class USphereComponent* SphereComponent;
 
 	bool bCanEat;
 
 	FVector DirectionToChange;
-
 	FVector StartDirection;
-
 	FVector StartPosition;
 
-	class USphereComponent* SphereComponent;
+	FLinearColor StartingColor;
 
 	FTimerHandle UnusedHandle;
 	

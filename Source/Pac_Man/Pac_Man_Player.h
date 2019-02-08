@@ -26,13 +26,22 @@ private:
 	UPROPERTY(EditAnywhere)
 		float CornerPowerUpAffectionDuration;
 
+	UPROPERTY(EditAnywhere)
+		FLinearColor HunterColor;
+
+	UPROPERTY(EditAnywhere)
+		FLinearColor InvencibleColor; // Color of the corner's power up
+
 private:
 
 	class USphereComponent* SphereComponent;
 
 	class UPac_Man_MovementComponent* MovementComponent;
 
+	class UMaterialInstanceDynamic * Materialnstance;
+
 	FVector Direction;
+	FLinearColor StartingColor;
 
 	bool bIsHunting; 
 
@@ -72,7 +81,7 @@ private:
 		void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
-		void HuntFalse();
+		void ResetState();
 
 public:
 

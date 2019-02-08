@@ -18,12 +18,13 @@ class PAC_MAN_API APac_ManGameModeBase : public AGameModeBase
 
 private:
 
-	FTimerHandle UnusedHandle;
+	FTimerHandle UnusedHandle; // Unused FTimerHandle
 
 public: 
 
+	/**
+	 * Send an effect to the ghosts in scene and set a timer to reset the effect state of each ghost with a given duration
+	 */
 	void SendEffectToGhosts(ECollectibleTypeEnum Effect, float Duration);
 	void ResetGhostsEffects();
-
-
 };
