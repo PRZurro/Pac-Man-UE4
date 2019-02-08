@@ -21,31 +21,31 @@ private:
 		UStaticMeshComponent* SphereVisual;
 
 	UPROPERTY(EditAnywhere)
-		float HunterPowerUpAffectionDuration;
+		float HunterPowerUpAffectionDuration; 
 
 	UPROPERTY(EditAnywhere)
 		float CornerPowerUpAffectionDuration;
 
 	UPROPERTY(EditAnywhere)
-		FLinearColor HunterColor;
+		FLinearColor HunterColor; // Color of the hunter's power up 
 
 	UPROPERTY(EditAnywhere)
 		FLinearColor InvencibleColor; // Color of the corner's power up
 
 private:
 
-	class USphereComponent* SphereComponent;
+	class USphereComponent* SphereComponent; // Sphere collider
 
-	class UPac_Man_MovementComponent* MovementComponent;
+	class UPac_Man_MovementComponent* MovementComponent; // Component that let's this player to move
 
-	class UMaterialInstanceDynamic * Materialnstance;
+	class UMaterialInstanceDynamic * Materialnstance; // Material Instance of this pawn
 
-	FVector Direction;
-	FLinearColor StartingColor;
+	FVector Direction; //Current direction of this pawn
+	FLinearColor StartingColor; 
 
 	bool bIsHunting; 
 
-	FTimerHandle UnusedHandle;
+	FTimerHandle UnusedHandle; // Unused FTimerHandle
 
 protected:
 
@@ -68,30 +68,55 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-
+	/**
+	 * Method trigger by input set in project settings (Axis). Move the pawn in X axis
+	 */
 	void MoveForward(float AxisValue);
+	/**
+	 * Method trigger by input set in project settings (Axis). Move the pawn in Y axis.
+	 */
 	void MoveRight(float AxisValue);
 
 private:
-
+	/**
+	 * Event triggered when this pawn is starting to overlap another actor 
+	 */
 	UFUNCTION()
 		void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	/**
+	 * Event triggered when this pawn is ending of overlap another actor
+	 */
 	UFUNCTION()
 		void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	/**
+	 * Reset members and variables from all effects
+	 */
 	UFUNCTION()
 		void ResetState();
 
 public:
 
+	/**
+	 * Adds the input value to the score of this pawn. 
+	 */
 	void AddScore(int ScoreToAdd);
 
 public:
 
+	/**
+	 * Member that return the hunting state of this pawn. Hunting is the state in which the player can eat ghosts. 
+	 */
 	bool IsHunting();
 
+	/**
+	 * Return the movement direction of this pawn. 
+	 */
 	FVector GetMovementDirection();
 
+	/**
+	 * Necessary member to bind the Movement Component with the engine. 
+	 */
 	virtual UPawnMovementComponent* GetMovementComponent() const override;
 };
